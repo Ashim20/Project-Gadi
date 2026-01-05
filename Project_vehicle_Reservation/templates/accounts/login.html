@@ -1,127 +1,399 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Login</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: radial-gradient(circle at 20% 20%, #3b82f6, #0b1224 55%),
+          radial-gradient(circle at 80% 0%, #7c3aed, transparent 40%),
+          linear-gradient(135deg, #0b1224, #0f172a 65%);
+        min-height: 100vh;
+        color: #e7ecff;
+      }
+
+      .shell {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 32px 20px;
+      }
+
+      .auth-card {
+        width: min(1100px, 100%);
+        display: grid;
+        grid-template-columns: 1.05fr 0.95fr;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 25px 80px rgba(0, 0, 0, 0.35);
+        backdrop-filter: blur(10px);
+      }
+
+      .form-pane {
+        padding: 40px 44px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.06),
+          rgba(255, 255, 255, 0)
+        );
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        color: #c3d3ff;
+        letter-spacing: 0.02em;
+      }
+
+      .brand-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #7c3aed, #3b82f6);
+      }
+
+      .card-title {
+        margin: 6px 0 0;
+        font-size: 30px;
+        color: #f8f9ff;
+      }
+
+      .card-subtitle {
+        margin: 4px 0 6px;
+        color: #c7d2fe;
+        font-size: 14px;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .form-field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .form-field label {
+        font-weight: 600;
+        color: #dfe6ff;
+        font-size: 13px;
+      }
+
+      .form-field input {
+        width: 100%;
+        padding: 12px 12px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: rgba(255, 255, 255, 0.08);
+        color: #f8f9ff;
+        font-size: 14px;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease,
+          background 0.15s ease;
+      }
+
+      .form-field input:focus {
+        border-color: #7c9eff;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(124, 158, 255, 0.25);
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      .form-field.has-error input {
+        border-color: #f87171;
+        background: rgba(248, 113, 113, 0.08);
+        color: #fff5f5;
+        box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.25);
+      }
+
+      .errorlist {
+        color: #ffd1d1;
+        font-size: 12px;
+        margin: 2px 0 0;
+        list-style: none;
+        padding-left: 0;
+      }
+
+      .errorlist li {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .errorlist li::before {
+        content: "";
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #f87171;
+        display: inline-block;
+      }
+
+      .action-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 4px;
+      }
+
+      .action-row a {
+        color: #c3d3ff;
+        font-size: 12px;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .action-row a:hover {
+        text-decoration: underline;
+      }
+
+      .cta {
+        width: 100%;
+        padding: 12px;
+        margin-top: 6px;
+        background: linear-gradient(135deg, #4f46e5, #6b21a8);
+        border: none;
+        color: #fff;
+        font-size: 15px;
+        font-weight: 700;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: transform 0.1s ease, box-shadow 0.2s ease;
+        box-shadow: 0 12px 30px rgba(79, 70, 229, 0.35);
+      }
+
+      .cta:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 16px 36px rgba(79, 70, 229, 0.5);
+      }
+
+      .cta:active {
+        transform: translateY(0);
+      }
+
+      .password-hints {
+        margin: 10px 0 2px;
+        color: #d8e0ff;
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      .password-hints .hint-row {
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+      }
+
+      .password-hints .dot {
+        width: 8px;
+        height: 8px;
+        margin-top: 5px;
+        border-radius: 50%;
+        background: #7dd3fc;
+        flex-shrink: 0;
+      }
+
+      .password-hints.has-errors {
+        color: #ffb3b3;
+      }
+
+      .password-hints.has-errors .dot {
+        background: #f87171;
+      }
+
+      .footer-text {
+        margin-top: 10px;
+        font-size: 13px;
+        color: #dfe6ff;
+      }
+
+      .footer-text a {
+        color: #9ec5ff;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      .footer-text a:hover {
+        text-decoration: underline;
+      }
+
+      .visual-pane {
+        position: relative;
+        background: radial-gradient(
+            circle at 30% 30%,
+            rgba(255, 255, 255, 0.08),
+            transparent 45%
+          ),
+          linear-gradient(
+            120deg,
+            rgba(124, 58, 237, 0.4),
+            rgba(59, 130, 246, 0.35)
+          );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      .visual-pane img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: saturate(1.05) brightness(0.95);
+      }
+
+      .visual-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          145deg,
+          rgba(11, 18, 36, 0.45),
+          rgba(11, 18, 36, 0.1)
+        );
+      }
+
+      .badge-strip {
+        position: absolute;
+        bottom: 22px;
+        left: 22px;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 14px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 14px;
+        backdrop-filter: blur(6px);
+        color: #f8f9ff;
+        font-weight: 600;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+      }
+
+      .badge-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #22d3ee, #a855f7);
+        box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.25);
+      }
+
+      @media (max-width: 980px) {
+        .auth-card {
+          grid-template-columns: 1fr;
         }
 
-        .login-box {
-            background: #ffffff;
-            padding: 35px;
-            width: 350px;
-            border-radius: 10px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        .visual-pane {
+          min-height: 240px;
+          order: -1;
         }
 
-        .login-box h2 {
-            text-align: center;
-            margin-bottom: 25px;
-            color: #333;
+        .form-pane {
+          padding: 32px 26px;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .form-pane {
+          padding: 28px 18px;
         }
 
-        .login-box form p {
-            margin-bottom: 15px;
+        .card-title {
+          font-size: 26px;
         }
-
-        .login-box label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-            color: #555;
-        }
-
-        .login-box input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 14px;
-        }
-
-        .login-box input:focus {
-            border-color: #2a5298;
-            outline: none;
-        }
-
-        .login-box button {
-            width: 100%;
-            padding: 12px;
-            margin-top: 10px;
-            background: #2a5298;
-            border: none;
-            color: #fff;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .login-box button:hover {
-            background: #1e3c72;
-        }
-
-        .errorlist {
-            color: red;
-            font-size: 13px;
-            margin-bottom: 10px;
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .footer-text {
-            text-align: center;
-            margin-top: 15px;
-            font-size: 14px;
-        }
-
-        .footer-text a {
-            color: #2a5298;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .footer-text a:hover {
-            text-decoration: underline;
-        }
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
+    <div class="shell">
+      <div class="auth-card">
+        <div class="form-pane">
+          <div class="brand">
+            <span class="brand-dot"></span>
+            <span>Project Gadi</span>
+          </div>
+          <div class="card-title">Welcome back</div>
+          <div class="card-subtitle">Sign in to continue your journey</div>
 
-<div class="login-box">
-    <h2>Login</h2>
+          <form method="post" autocomplete="off">
+            {% csrf_token %} {% for field in form %}
+            <div
+              class="form-field {% if form.is_bound and field.errors %}has-error{% endif %}"
+            >
+              {{ field.label_tag }} {{ field }} {% if field.errors %}
+              <ul class="errorlist">
+                {% for error in field.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+              </ul>
+              {% endif %}
+            </div>
+            {% endfor %}
 
-    <form method="post">
-        {% csrf_token %}
+            <div
+              class="password-hints {% if form.is_bound and form.errors %}has-errors{% endif %}"
+            >
+              <div class="hint-row">
+                <span class="dot"></span>
+                <div>
+                  Your password cannot be too similar to other personal info.
+                </div>
+              </div>
+              <div class="hint-row">
+                <span class="dot"></span>
+                <div>It must contain at least 8 characters.</div>
+              </div>
+              <div class="hint-row">
+                <span class="dot"></span>
+                <div>It cannot be a commonly used password.</div>
+              </div>
+              <div class="hint-row">
+                <span class="dot"></span>
+                <div>It cannot be entirely numeric.</div>
+              </div>
+            </div>
 
-        {% for field in form %}
-            <p>
-                {{ field.label_tag }}
-                {{ field }}
-                {{ field.errors }}
-            </p>
-        {% endfor %}
+            <div class="action-row">
+              <span></span>
+              <a href="#">Forgot password?</a>
+            </div>
 
-        <button type="submit">Login</button>
-    </form>
+            <button class="cta" type="submit">Login</button>
+          </form>
 
-    <div class="footer-text">
-        Don’t have an account?
-        <a href="{% url 'signup' %}">Register</a>
+          <div class="footer-text">
+            Don't have an account? <a href="{% url 'signup' %}">Register</a>
+          </div>
+        </div>
+
+        <div class="visual-pane">
+          <img src="../../media/car.png" alt="Car" />
+          <div class="visual-overlay"></div>
+          <div class="badge-strip">
+            <span class="badge-dot"></span>
+            <span>Smart reservations · 24/7</span>
+          </div>
+        </div>
+      </div>
     </div>
-</div>
-
-</body>
+  </body>
 </html>
