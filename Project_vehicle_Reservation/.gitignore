@@ -6,3 +6,22 @@ db.sqlite3
 .vscode/
 staticfiles/
 media/
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+env/
+venv/
+
+# Pip / package files
+*.egg-info/
+*.egg
+*.dist-info/
+
+# Logs
+*.log
+
+# VS Code settings (optional)
+.vscode/
