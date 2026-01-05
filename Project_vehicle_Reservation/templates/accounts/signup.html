@@ -1,166 +1,415 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Sign Up</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sign Up</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <style>
-    body{
-      margin:0;
-      padding:0;
-      font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #1e3c72, #2a5298);
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:24px;
-    }
+    <style>
+      * {
+        box-sizing: border-box;
+      }
 
-    .card{
-      width:100%;
-      max-width:420px;
-      background:#fff;
-      border-radius:14px;
-      box-shadow:0 12px 30px rgba(0,0,0,0.18);
-      padding:26px 26px 22px;
-    }
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: radial-gradient(circle at 20% 20%, #3b82f6, #0b1224 55%),
+          radial-gradient(circle at 80% 0%, #7c3aed, transparent 40%),
+          linear-gradient(135deg, #0b1224, #0f172a 65%);
+        min-height: 100vh;
+        color: #e9f0ff;
+        overflow-x: hidden;
+      }
 
-    h2{
-      margin:0 0 14px;
-      text-align:center;
-      color:#1e3c72;
-      font-size:24px;
-      font-weight:800;
-    }
+      .shell {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px 16px;
+        overflow: auto;
+      }
 
-    .subtext{
-      text-align:center;
-      margin:0 0 18px;
-      color:#556;
-      font-size:14px;
-      line-height:1.4;
-    }
+      .auth-card {
+        width: min(980px, 100%);
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(10px);
+      }
 
-    .errorlist{
-      list-style:none;
-      padding:0;
-      margin:0 0 14px;
-      color:#b42318;
-      font-size:13px;
-      background:#fff1f1;
-      border:1px solid #ffd6d6;
-      border-radius:10px;
-      padding:10px 12px;
-    }
+      .visual-pane {
+        position: relative;
+        background: radial-gradient(
+            circle at 70% 20%,
+            rgba(255, 255, 255, 0.12),
+            transparent 45%
+          ),
+          linear-gradient(
+            120deg,
+            rgba(124, 58, 237, 0.35),
+            rgba(59, 130, 246, 0.25)
+          );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        min-height: 240px;
+      }
 
-    form p{
-      margin:0 0 14px;
-    }
+      .visual-pane img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: saturate(1.05) brightness(0.97);
+      }
 
-    label{
-      display:block;
-      margin-bottom:6px;
-      font-size:13px;
-      font-weight:700;
-      color:#334;
-    }
+      .visual-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          145deg,
+          rgba(10, 18, 32, 0.5),
+          rgba(10, 18, 32, 0.18)
+        );
+      }
 
-    input, select, textarea{
-      width:100%;
-      padding:11px 12px;
-      border:1px solid #d6d9e3;
-      border-radius:10px;
-      outline:none;
-      font-size:14px;
-      transition: border-color .2s, box-shadow .2s;
-      background:#fff;
-    }
+      .badge-strip {
+        position: absolute;
+        bottom: 22px;
+        right: 22px;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 14px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 14px;
+        backdrop-filter: blur(6px);
+        color: #f8f9ff;
+        font-weight: 600;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+      }
 
-    input:focus, select:focus, textarea:focus{
-      border-color:#2a5298;
-      box-shadow:0 0 0 3px rgba(42,82,152,0.18);
-    }
+      .badge-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #22d3ee, #7c3aed);
+        box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.22);
+      }
 
-    .helptext{
-      display:block;
-      margin-top:6px;
-      color:#667;
-      font-size:12px;
-    }
+      .form-pane {
+        padding: 26px 28px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.06),
+          rgba(255, 255, 255, 0)
+        );
+      }
 
-    .field-errors{
-      margin-top:6px;
-      color:#b42318;
-      font-size:12px;
-      font-weight:600;
-    }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        color: #c3d3ff;
+        letter-spacing: 0.02em;
+      }
 
-    .btn{
-      width:100%;
-      border:none;
-      border-radius:10px;
-      padding:12px 14px;
-      font-size:15px;
-      font-weight:800;
-      cursor:pointer;
-      background:#2a5298;
-      color:#fff;
-      transition: background .2s, transform .05s;
-      margin-top:8px;
-    }
-    .btn:hover{ background:#1e3c72; }
-    .btn:active{ transform: scale(0.99); }
+      .brand-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #10b981, #22d3ee);
+      }
 
-    .footer{
-      margin-top:14px;
-      text-align:center;
-      font-size:14px;
-      color:#556;
-    }
+      .card-title {
+        margin: 6px 0 0;
+        font-size: 30px;
+        color: #f8f9ff;
+      }
 
-    .footer a{
-      color:#2a5298;
-      font-weight:700;
-      text-decoration:none;
-    }
-    .footer a:hover{ text-decoration:underline; }
-  </style>
-</head>
+      .card-subtitle {
+        margin: 4px 0 10px;
+        color: #c7d2fe;
+        font-size: 14px;
+      }
 
-<body>
-  <div class="card">
-    <h2>Create Account</h2>
-    <p class="subtext">Register to book vehicles or register as a vehicle owner.</p>
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
 
-    <form method="post" novalidate>
-      {% csrf_token %}
+      .double-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 12px;
+      }
 
-      {% if form.non_field_errors %}
-        <ul class="errorlist">
-          {% for err in form.non_field_errors %}
-            <li>{{ err }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
+      .form-field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
 
-      {% for field in form %}
-        <p>
-          {{ field.label_tag }}
-          {{ field }}
-          {% if field.help_text %}<small class="helptext">{{ field.help_text }}</small>{% endif %}
-          {% for err in field.errors %}<div class="field-errors">{{ err }}</div>{% endfor %}
-        </p>
-      {% endfor %}
+      .form-field label {
+        font-weight: 600;
+        color: #dfe6ff;
+        font-size: 13px;
+      }
 
-      <button type="submit" class="btn">Create account</button>
-    </form>
+      .form-field input,
+      .form-field select,
+      .form-field textarea {
+        width: 100%;
+        padding: 12px 12px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: rgba(255, 255, 255, 0.08);
+        color: #f8f9ff;
+        font-size: 14px;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease,
+          background 0.15s ease;
+      }
 
-    <div class="footer">
-      Already have an account?
-      <a href="{% url 'login' %}">Login</a>
+      .form-field input:focus,
+      .form-field select:focus,
+      .form-field textarea:focus {
+        border-color: #7c9eff;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(124, 158, 255, 0.22);
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      .form-field.has-error input,
+      .form-field.has-error select,
+      .form-field.has-error textarea {
+        border-color: #f87171;
+        background: rgba(248, 113, 113, 0.08);
+        color: #fff5f5;
+        box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.25);
+      }
+
+      .helptext {
+        color: #c7d2fe;
+        font-size: 12px;
+      }
+
+      .errorlist {
+        color: #ffd1d1;
+        font-size: 12px;
+        margin: 2px 0 0;
+        list-style: none;
+        padding-left: 0;
+      }
+
+      .errorlist li {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .errorlist li::before {
+        content: "";
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #f87171;
+        display: inline-block;
+      }
+
+      .password-hints {
+        margin: 8px 0 0;
+        color: #d8e0ff;
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      .password-hints .hint-row {
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+      }
+
+      .password-hints .dot {
+        width: 8px;
+        height: 8px;
+        margin-top: 5px;
+        border-radius: 50%;
+        background: #7dd3fc;
+        flex-shrink: 0;
+      }
+
+      .password-hints.has-errors {
+        color: #ffb3b3;
+      }
+
+      .password-hints.has-errors .dot {
+        background: #f87171;
+      }
+
+      .action-row {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        margin-top: 4px;
+        font-size: 12px;
+      }
+
+      .action-row a {
+        color: #b9d3ff;
+        text-decoration: none;
+        font-weight: 700;
+      }
+
+      .action-row a:hover {
+        text-decoration: underline;
+      }
+
+      .cta {
+        width: 100%;
+        padding: 12px;
+        margin-top: 6px;
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        border: none;
+        color: #fff;
+        font-size: 15px;
+        font-weight: 700;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: transform 0.1s ease, box-shadow 0.2s ease;
+        box-shadow: 0 12px 30px rgba(124, 58, 237, 0.35);
+      }
+
+      .cta:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 16px 36px rgba(124, 58, 237, 0.5);
+      }
+      .cta:active {
+        transform: translateY(0);
+      }
+
+      .footer-text {
+        margin-top: 10px;
+        font-size: 13px;
+        color: #dfe6ff;
+      }
+
+      .footer-text a {
+        color: #9ce2ff;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      .footer-text a:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 980px) {
+        .auth-card {
+          width: min(720px, 100%);
+          grid-template-columns: 1fr;
+        }
+        .visual-pane {
+          min-height: 220px;
+          order: -1;
+        }
+        .form-pane {
+          padding: 24px 22px;
+          gap: 14px;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .auth-card {
+          width: 100%;
+        }
+        .form-pane {
+          padding: 22px 16px;
+        }
+        .card-title {
+          font-size: 26px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="shell">
+      <div class="auth-card">
+        <div class="visual-pane">
+          <img
+            src="https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=1200&q=80"
+            alt="Garage"
+          />
+          <div class="visual-overlay"></div>
+          <div class="badge-strip">
+            <span class="badge-dot"></span>
+            <span>List, book, and drive</span>
+          </div>
+        </div>
+
+        <div class="form-pane">
+          <div class="brand">
+            <span class="brand-dot"></span>
+            <span>Project Gadi</span>
+          </div>
+          <div class="card-title">Create your account</div>
+          <div class="card-subtitle">
+            Sign up to book rides or list your vehicles
+          </div>
+
+          <form method="post" novalidate autocomplete="off">
+            {% csrf_token %} {% for field in form %}
+            <div
+              class="form-field {% if form.is_bound and field.errors %}has-error{% endif %}"
+            >
+              {{ field.label_tag }} {{ field }} {% if field.help_text %}<span
+                class="helptext"
+                >{{ field.help_text }}</span
+              >{% endif %} {% if field.errors %}
+              <ul class="errorlist">
+                {% for err in field.errors %}
+                <li>{{ err }}</li>
+                {% endfor %}
+              </ul>
+              {% endif %} {% if field.name == "password2" %}
+              <div
+                class="password-hints {% if form.is_bound and form.errors %}has-errors{% endif %}"
+              >
+                <div class="hint-row">
+                  <span class="dot"></span>
+                  <div>Use 8+ characters with letters and numbers.</div>
+                </div>
+                <div class="hint-row">
+                  <span class="dot"></span>
+                  <div>Match both password fields exactly.</div>
+                </div>
+              </div>
+              {% endif %}
+            </div>
+            {% endfor %}
+
+            <div class="action-row">
+              <a href="{% url 'login' %}">Already registered? Login</a>
+            </div>
+
+            <button class="cta" type="submit">Create account</button>
+          </form>
+
+          <div class="footer-text">Need help? Contact support anytime.</div>
+        </div>
+      </div>
     </div>
-  </div>
-</body>
+  </body>
 </html>

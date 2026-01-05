@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "accounts",
     "vehicles",
     "reservations",
+    "tailwind",
     
 ]
 
@@ -141,6 +142,7 @@ REST_FRAMEWORK = {
 
 
 TEMPLATES[0]["DIRS"] = [BASE_DIR / "templates"]
+
 
 LOGIN_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = "/"
