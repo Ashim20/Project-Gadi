@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit & Resubmit Vehicle</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card {
+            background: #ffffff;
+            width: 520px;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .vehicle-info {
+            text-align: center;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .approved {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .feedback-box {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 5px solid #dc3545;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        form p {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #444;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        input[type="file"] {
+            padding: 6px;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #2a5298;
+        }
+
+        .submit-btn {
+            width: 100%;
+            margin-top: 10px;
+            padding: 12px;
+            background: #2a5298;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #1e3c72;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .back-link a {
+            text-decoration: none;
+            color: #2a5298;
+            font-weight: 600;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+
+        .errorlist {
+            color: red;
+            font-size: 13px;
+            margin-bottom: 10px;
+            list-style: none;
+            padding-left: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+    <h2>Edit & Resubmit Vehicle</h2>
+
+    <div class="vehicle-info">
+        <strong>{{ vehicle.model_name }}</strong> |
+        Plate: <strong>{{ vehicle.number_plate_no }}</strong> |
+        Status:
+        <span class="badge {{ vehicle.status }}">
+            {{ vehicle.status }}
+        </span>
+    </div>
+
+    {% if vehicle.status == "rejected" and vehicle.admin_feedback %}
+        <div class="feedback-box">
+            <strong>Admin Feedback:</strong><br>
+            {{ vehicle.admin_feedback }}
+        </div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {% for field in form %}
+            <p>
+                {{ field.label_tag }}
+                {{ field }}
+                {{ field.errors }}
+            </p>
+        {% endfor %}
+
+        <button type="submit" class="submit-btn">
+            Update & Resubmit
+        </button>
+    </form>
+
+    <div class="back-link">
+        <a href="{% url 'my_vehicles' %}">← Back to My Vehicles</a>
+    </div>
+</div>
+
+</body>
+</html>

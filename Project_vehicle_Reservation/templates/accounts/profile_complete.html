@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Complete Profile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    body{
+      margin:0;
+      font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
+
+    .card{
+      width:100%;
+      max-width:560px;
+      background:#fff;
+      border-radius:14px;
+      box-shadow:0 12px 30px rgba(0,0,0,0.18);
+      overflow:hidden;
+    }
+
+    .header{
+      padding:22px 24px;
+      background:#f5f7ff;
+      border-bottom:1px solid #e9ecff;
+    }
+
+    .header h2{
+      margin:0;
+      color:#1e3c72;
+      font-size:22px;
+      font-weight:700;
+    }
+
+    .header p{
+      margin:6px 0 0;
+      color:#556;
+      font-size:14px;
+      line-height:1.5;
+    }
+
+    form{
+      padding:22px 24px 24px;
+    }
+
+    .errorlist{
+      list-style:none;
+      padding:0;
+      margin:0 0 14px;
+      color:#b42318;
+      font-size:13px;
+      background:#fff1f1;
+      border:1px solid #ffd6d6;
+      border-radius:10px;
+      padding:10px 12px;
+    }
+
+    .field{
+      margin-bottom:14px;
+    }
+
+    label{
+      display:block;
+      margin-bottom:6px;
+      font-size:13px;
+      font-weight:700;
+      color:#334;
+    }
+
+    input, select, textarea{
+      width:100%;
+      padding:11px 12px;
+      border:1px solid #d6d9e3;
+      border-radius:10px;
+      outline:none;
+      font-size:14px;
+      transition: border-color .2s, box-shadow .2s;
+      background:#fff;
+    }
+
+    input:focus, select:focus, textarea:focus{
+      border-color:#2a5298;
+      box-shadow:0 0 0 3px rgba(42,82,152,0.18);
+    }
+
+    .helptext{
+      display:block;
+      margin-top:6px;
+      color:#667;
+      font-size:12px;
+    }
+
+    .field-errors{
+      margin-top:6px;
+      color:#b42318;
+      font-size:12px;
+      font-weight:600;
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      margin-top:16px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      flex:1;
+      border:none;
+      border-radius:10px;
+      padding:12px 14px;
+      font-size:15px;
+      font-weight:700;
+      cursor:pointer;
+      transition: transform .05s, background .2s;
+    }
+
+    .btn:active{ transform: scale(0.99); }
+
+    .btn-primary{
+      background:#2a5298;
+      color:#fff;
+    }
+    .btn-primary:hover{ background:#1e3c72; }
+
+    .btn-secondary{
+      background:#eef2ff;
+      color:#1e3c72;
+      text-decoration:none;
+      text-align:center;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .btn-secondary:hover{ background:#e0e7ff; }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+
+    @media (max-width: 600px){
+      .grid{ grid-template-columns: 1fr; }
+      .btn{ flex:unset; width:100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="header">
+      <h2>Complete Your Profile</h2>
+      <p>Fill in your basic details. Vehicle owners must complete this before accessing owner features.</p>
+    </div>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <ul class="errorlist">
+          {% for err in form.non_field_errors %}
+            <li>{{ err }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      {# Optional: make it look nicer by grouping fields #}
+      <div class="grid">
+        <div class="field">
+          {{ form.full_name.label_tag }}
+          {{ form.full_name }}
+          {% if form.full_name.help_text %}<small class="helptext">{{ form.full_name.help_text }}</small>{% endif %}
+          {% for err in form.full_name.errors %}<div class="field-errors">{{ err }}</div>{% endfor %}
+        </div>
+
+        <div class="field">
+          {{ form.phone.label_tag }}
+          {{ form.phone }}
+          {% if form.phone.help_text %}<small class="helptext">{{ form.phone.help_text }}</small>{% endif %}
+          {% for err in form.phone.errors %}<div class="field-errors">{{ err }}</div>{% endfor %}
+        </div>
+      </div>
+
+      <div class="field">
+        {{ form.address_line1.label_tag }}
+        {{ form.address_line1 }}
+        {% for err in form.address_line1.errors %}<div class="field-errors">{{ err }}</div>{% endfor %}
+      </div>
+
+      <div class="field">
+        {{ form.address_line2.label_tag }}
+        {{ form.address_line2 }}
+        {% for err in form.address_line2.errors %}<div class="field-errors">{{ err }}</div>{% endfor %}
+      </div>
+
+      <div class="grid">
+        <div class="field">
+          {{ form.city.label_tag }}
+          {{ form.city }}
+          {% for err in form.city.errors %}<div class="field-errors">{{ err }}</div>{% endfor %}
+        </div>
+
+        <div class="field">
+          {{ form.state.label_tag }}
+          {{ form.state }}
+          {% for err in form.state.errors %}<div class="field-errors">{{ err }}</div>{% endfor %}
+        </div>
+      </div>
+
+      <div class="field">
+        {{ form.country.label_tag }}
+        {{ form.country }}
+        {% for err in form.country.errors %}<div class="field-errors">{{ err }}</div>{% endfor %}
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="btn btn-primary">Save Profile</button>
+
+        {# Optional back button: choose one destination #}
+        <a href="{% url 'home' %}" class="btn btn-secondary">Back to Home</a>
+      </div>
+    </form>
+  </div>
+
+</body>
+</html>

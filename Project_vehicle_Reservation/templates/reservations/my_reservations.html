@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Reservations</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 30px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f6f9;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .reservation-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+
+        .reservation-table th,
+        .reservation-table td {
+            padding: 14px 12px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        .reservation-table thead {
+            background: #2a5298;
+            color: #ffffff;
+        }
+
+        .reservation-table tr:nth-child(even) {
+            background: #f9fafc;
+        }
+
+        .status {
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .status.pending {
+            color: #856404;
+        }
+
+        .status.approved {
+            color: #155724;
+        }
+
+        .status.rejected {
+            color: #721c24;
+        }
+
+        .status.cancelled {
+            color: #6c757d;
+        }
+
+        .cancel-btn {
+            padding: 6px 12px;
+            border-radius: 5px;
+            background: #dc3545;
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 13px;
+            transition: background 0.3s;
+        }
+
+        .cancel-btn:hover {
+            background: #b02a37;
+        }
+
+        .empty-state {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            color: #777;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 15px;
+            text-decoration: none;
+            font-weight: 600;
+            color: #2a5298;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .reservation-table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<h2>My Reservations</h2>
+
+{% if reservations %}
+    <table class="reservation-table">
+        <thead>
+            <tr>
+                <th>Vehicle</th>
+                <th>Dates</th>
+                <th>Status</th>
+                <th>Owner Note</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for r in reservations %}
+            <tr>
+                <td>
+                    {{ r.vehicle.model_name }}<br>
+                    <small>({{ r.vehicle.vehicle_type }})</small>
+                </td>
+
+                <td>
+                    {{ r.start_date }} → {{ r.end_date }}
+                </td>
+
+                <td>
+                    <span class="status {{ r.status }}">
+                        {{ r.status }}
+                    </span>
+                </td>
+
+                <td>
+                    {{ r.owner_note|default:"-" }}
+                </td>
+
+                <td>
+                    {% if r.status != "cancelled" and r.status != "rejected" %}
+                        <a href="{% url 'cancel_my_reservation' r.id %}"
+                           class="cancel-btn"
+                           onclick="return confirm('Are you sure you want to cancel this reservation?');">
+                            Cancel
+                        </a>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div class="empty-state">
+        <p>No reservations yet.</p>
+    </div>
+{% endif %}
+
+<a href="{% url 'home' %}" class="back-link">← Back to Home</a>
+
+</body>
+</html>

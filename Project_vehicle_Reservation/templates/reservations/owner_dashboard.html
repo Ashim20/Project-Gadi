@@ -1,0 +1,257 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Owner Reservations Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --primary: #2563eb;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --warning: #d97706;
+      --border: #e5e7eb;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead {
+      background: #f1f5f9;
+    }
+
+    th, td {
+      padding: 14px 16px;
+      text-align: left;
+      font-size: 0.95rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    th {
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+    }
+
+    tbody tr:hover {
+      background: #f8fafc;
+    }
+
+    .vehicle {
+      font-weight: 600;
+    }
+
+    .plate {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+
+    .badge.pending { background: #fef3c7; color: #92400e; }
+    .badge.approved { background: #dcfce7; color: #166534; }
+    .badge.rejected { background: #fee2e2; color: #991b1b; }
+    .badge.cancelled { background: #e5e7eb; color: #374151; }
+
+    .note {
+      max-width: 260px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .actions a {
+      display: inline-block;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      margin-right: 6px;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover { background: #1d4ed8; }
+
+    .btn-danger {
+      background: var(--danger);
+      color: #fff;
+    }
+
+    .btn-danger:hover { background: #b91c1c; }
+
+    .empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+    }
+
+    
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:18px;
+  flex-wrap:wrap;
+}
+
+.home-btn{
+  display:inline-block;
+  padding:10px 16px;
+  border-radius:12px;
+  background:#2563eb;
+  color:#fff;
+  text-decoration:none;
+  font-weight:600;
+  font-size:0.9rem;
+  transition:all .2s ease;
+}
+.home-btn:hover{
+  background:#1d4ed8;
+}
+
+    @media (max-width: 900px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+
+      thead { display: none; }
+
+      tr {
+        border-bottom: 1px solid var(--border);
+        padding: 16px;
+      }
+
+      td {
+        border: none;
+        padding: 8px 0;
+      }
+
+      td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: var(--muted);
+        text-transform: uppercase;
+        margin-bottom: 2px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+<div class="topbar">
+  <h2 style="margin:0;">Owner Reservations Dashboard</h2>
+
+  <a href="{% url 'my_vehicles' %}" class="home-btn">
+    Home
+  </a>
+</div>
+
+
+  <div class="card">
+    {% if reservations %}
+    <table>
+      <thead>
+        <tr>
+          <th>Vehicle</th>
+          <th>User</th>
+          <th>Dates</th>
+          <th>Status</th>
+          <th>Note</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in reservations %}
+        <tr>
+          <td data-label="Vehicle">
+            <span class="vehicle">{{ r.vehicle.model_name }}</span>
+            <span class="plate">{{ r.vehicle.number_plate_no }}</span>
+          </td>
+          <td data-label="User">{{ r.user.username }}</td>
+          <td data-label="Dates">{{ r.start_date }} → {{ r.end_date }}</td>
+          <td data-label="Status">
+            <span class="badge {{ r.status }}">{{ r.status }}</span>
+          </td>
+          <td data-label="Note" class="note">{{ r.purpose|default:"—" }}</td>
+          <td data-label="Actions" class="actions">
+            {% if r.status == "pending" %}
+              <a class="btn-primary" href="{% url 'owner_decide_reservation' r.id %}">Approve / Reject</a>
+            {% elif r.status == "approved" %}
+              <a class="btn-danger" href="{% url 'owner_cancel_approved' r.id %}">Cancel</a>
+            {% else %}
+              —
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <div class="empty">
+        <p>No reservations for your vehicles.</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+ 
+</body>
+</html>

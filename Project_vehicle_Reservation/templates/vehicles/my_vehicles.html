@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Vehicles</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 30px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f6f9;
+        }
+
+        .info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        h2 {
+            color: #333;
+            margin: 0;
+        }
+        .action-btn {
+    background: #17a2b8;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    transition: background 0.3s;
+}
+
+.action-btn:hover {
+    background: #117a8b;
+}
+
+.disabled {
+    color: #aaa;
+    font-size: 13px;
+}
+
+
+        .btn {
+            background: #2a5298;
+            color: #fff;
+            padding: 10px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #1e3c72;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+        }
+
+        th {
+            background: #2a5298;
+            color: #fff;
+            padding: 12px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            color: #444;
+            font-size: 14px;
+        }
+
+        tr:hover {
+            background: #f9fbff;
+        }
+
+        .status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-block;
+            text-transform: capitalize;
+        }
+
+        .pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .approved {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .feedback.rejected {
+            color: #c82333;
+            font-weight: 600;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+        }
+
+        .date {
+            font-size: 13px;
+            color: #666;
+        }
+         .btn-info { background:#17a2b8; }
+  .btn-info:hover { background:#117a8b; }
+  
+    </style>
+</head>
+
+<body>
+
+
+<div class="header" style="display:flex; gap:10px;">
+        <a href="{% url 'owner_reservations' %}" class="btn" style="background:#17a2b8;">
+            View Reservations
+        </a>
+
+        <a href="{% url 'register_vehicle' %}" class="btn">
+            + Register New Vehicle
+        </a>
+    </div>
+<table>
+    <tr>
+    <th>Vehicle</th>
+    <th>Plate</th>
+    <th>Status</th>
+    <th>Admin Feedback</th>
+    <th>Submitted</th>
+    <th>Action</th>
+</tr>
+
+    {% for v in vehicles %}
+<tr>
+    <td>
+        <strong>{{ v.model_name }}</strong><br>
+        <small>{{ v.vehicle_type }}</small>
+    </td>
+
+    <td>{{ v.number_plate_no }}</td>
+
+    <td>
+        <span class="status {{ v.status }}">
+            {{ v.status }}
+        </span>
+    </td>
+
+    <td class="feedback {% if v.status == 'rejected' %}rejected{% endif %}">
+        {{ v.admin_feedback|default:"—" }}
+    </td>
+
+    <td class="date">
+        {{ v.submitted_at|date:"M d, Y" }}
+    </td>
+
+    <td>
+        {% if v.status != "approved" %}
+            <a href="{% url 'edit_vehicle' v.id %}" class="action-btn">
+                Edit / Resubmit
+            </a>
+        {% else %}
+            <span class="disabled">—</span>
+        {% endif %}
+    </td>
+</tr>
+
+
+    {% empty %}
+    <tr>
+        <td colspan="5" class="empty">
+            No vehicles submitted yet.
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>

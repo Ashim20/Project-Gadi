@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Available Vehicles</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 30px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f6f9;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .filter-box {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-box label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .filter-box select {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        .filter-box button {
+            padding: 9px 18px;
+            border: none;
+            border-radius: 6px;
+            background: #2a5298;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .filter-box button:hover {
+            background: #1e3c72;
+        }
+
+        .vehicle-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .vehicle-card {
+            background: #ffffff;
+            padding: 18px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .vehicle-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+        }
+
+        .vehicle-card h3 {
+            margin: 0 0 10px;
+            color: #2a5298;
+        }
+
+        .vehicle-info {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .vehicle-info span {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .top-bar{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            flex-wrap:wrap;
+            gap:10px;
+            margin-bottom:15px;
+        }
+
+        .my-res-btn{
+            display:inline-block;
+            padding: 9px 18px;
+            border-radius: 6px;
+            background:#17a2b8;
+            color:#fff;
+            text-decoration:none;
+            font-weight:600;
+            transition: background 0.3s;
+            margin-left:auto;
+        }
+        .my-res-btn:hover{
+            background:#117a8b;
+        }
+
+        .reserve-btn {
+            display: inline-block;
+            padding: 9px 16px;
+            border-radius: 6px;
+            background: #28a745;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s;
+            margin-right: 8px;
+            margin-top: 8px;
+        }
+
+        .reserve-btn:hover {
+            background: #1e7e34;
+        }
+
+        .empty-state {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            color: #777;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ✅ Modal must be INSIDE body -->
+<div id="vehicleModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:9999;">
+  <div style="background:#fff; max-width:520px; margin:8vh auto; border-radius:12px; padding:18px; position:relative;">
+    <button type="button" onclick="closeVehicleModal()"
+            style="position:absolute; right:12px; top:10px; border:none; background:transparent; font-size:20px; cursor:pointer;">
+      ✕
+    </button>
+
+    <h3 style="margin-top:0; color:#2a5298;">Vehicle Details</h3>
+
+    <!-- ✅ This id must match JS -->
+    <div id="vehicleModalBody" style="font-size:14px; color:#444;">
+      Loading...
+    </div>
+  </div>
+</div>
+
+<div class="top-bar">
+    <h2>Available Vehicles</h2>
+
+    {% if user.is_authenticated %}
+        <a href="{% url 'my_reservations' %}" class="my-res-btn">
+            My Reservations
+        </a>
+    {% endif %}
+</div>
+
+<form method="get" class="filter-box">
+    <label for="type">Filter by Type:</label>
+    <select name="type" id="type">
+        <option value="">All</option>
+        {% for key, label in types %}
+            <option value="{{ key }}" {% if selected == key %}selected{% endif %}>
+                {{ label }}
+            </option>
+        {% endfor %}
+    </select>
+    <button type="submit">Apply Filter</button>
+</form>
+
+{% if vehicles %}
+    <div class="vehicle-grid">
+        {% for v in vehicles %}
+            <div class="vehicle-card">
+
+                {% if v.vehicle_photo_with_plate %}
+                  <img src="{{ v.vehicle_photo_with_plate.url }}"
+                       alt="{{ v.model_name }}"
+                       style="width:100%; height:170px; object-fit:cover; border-radius:10px; margin-bottom:12px;">
+                {% else %}
+                  <div style="width:100%; height:170px; background:#eee; border-radius:10px; margin-bottom:12px; display:flex; align-items:center; justify-content:center; color:#777;">
+                    No photo
+                  </div>
+                {% endif %}
+
+                <h3>{{ v.model_name }}</h3>
+
+                <div class="vehicle-info">
+                    <span><strong>Type:</strong> {{ v.vehicle_type }}</span>
+                    <span><strong>Plate No:</strong> {{ v.number_plate_no }}</span>
+                </div>
+
+                <a href="{% url 'reserve_vehicle' v.id %}" class="reserve-btn">
+                    Reserve Vehicle
+                </a>
+
+                <a href="javascript:void(0)"
+                   class="reserve-btn"
+                   style="background:#17a2b8;"
+                   onclick="openVehicleModal({{ v.id }})">
+                   View Details
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="empty-state">
+        <p>No approved vehicles available.</p>
+    </div>
+{% endif %}
+
+<script>
+  async function openVehicleModal(vehicleId) {
+    const modal = document.getElementById("vehicleModal");
+    const body = document.getElementById("vehicleModalBody");
+
+    modal.style.display = "block";
+    body.innerHTML = "Loading...";
+
+    try {
+      const res = await fetch(`/vehicles/${vehicleId}/detail/`, { headers: { "Accept": "application/json" } });
+      if (!res.ok) throw new Error("Failed to load details.");
+
+      const data = await res.json();
+      const v = data.vehicle || {};
+      const o = data.owner || {};
+
+      const imgHtml = v.photo_url
+        ? `<img src="${v.photo_url}" alt="${(v.model_name || "Vehicle")}"
+                style="width:100%; height:220px; object-fit:cover; border-radius:10px; margin-bottom:12px;">`
+        : `<div style="width:100%; height:220px; background:#eee; border-radius:10px; margin-bottom:12px;
+                       display:flex; align-items:center; justify-content:center; color:#777;">
+             No photo available
+           </div>`;
+
+      body.innerHTML = `
+        ${imgHtml}
+
+        <div style="margin-bottom:14px;">
+          <h4 style="margin:0 0 8px;">Vehicle</h4>
+          <div><strong>Model:</strong> ${v.model_name || "—"}</div>
+          <div><strong>Type:</strong> ${v.vehicle_type || "—"}</div>
+          <div><strong>Plate No:</strong> ${v.number_plate_no || "—"}</div>
+        </div>
+
+        <div>
+          <h4 style="margin:0 0 8px;">Owner</h4>
+          <div><strong>Name:</strong> ${(o.full_name || o.username || "—")}</div>
+          <div><strong>Phone:</strong> ${(o.phone || "—")}</div>
+          <div><strong>Address:</strong> ${(o.address || "—")}</div>
+        </div>
+      `;
+    } catch (err) {
+      body.innerHTML = `<div style="color:red;">${err.message}</div>`;
+    }
+  }
+
+  function closeVehicleModal() {
+    document.getElementById("vehicleModal").style.display = "none";
+  }
+
+  // close when clicking outside the white modal content
+  document.getElementById("vehicleModal").addEventListener("click", (e) => {
+    if (e.target.id === "vehicleModal") closeVehicleModal();
+  });
+</script>
+
+</body>
+</html>
