@@ -5,11 +5,480 @@
     <title>Available Vehicles</title>
 
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
-            padding: 30px;
+            padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #f4f6f9;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .navbar.scrolled {
+            background: rgba(15, 23, 42, 0.95);
+            padding: 15px 50px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.5em;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+
+        .navbar-brand:hover {
+            transform: scale(1.05);
+        }
+
+        .brand-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #3b82f6 0%, #7c3aed 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1em;
+            font-weight: 700;
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .navbar-menu {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #bfdbfe;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1em;
+            transition: all 0.3s;
+            position: relative;
+            padding: 8px 0;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #3b82f6, #7c3aed);
+            transition: width 0.3s;
+        }
+
+        .nav-link:hover {
+            color: #fff;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-btn {
+            padding: 10px 25px;
+            border-radius: 25px;
+            background: linear-gradient(135deg, #3b82f6 0%, #7c3aed 100%);
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.8em;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 15px 20px;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .navbar-menu {
+                position: fixed;
+                top: 75px;
+                left: 0;
+                right: 0;
+                background: rgba(15, 23, 42, 0.98);
+                flex-direction: column;
+                padding: 30px;
+                gap: 20px;
+                transform: translateY(-100%);
+                opacity: 0;
+                transition: all 0.3s;
+                pointer-events: none;
+            }
+
+            .navbar-menu.active {
+                transform: translateY(0);
+                opacity: 1;
+                pointer-events: all;
+            }
+        }
+
+        /* Landing Page Styles */
+        .landing-page {
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #0b1224;
+        }
+
+        .landing-bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.9;
+            filter: brightness(0.9);
+        }
+
+        .landing-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.6) 0%, rgba(59, 130, 246, 0.4) 100%);
+        }
+
+        .landing-page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 70% 30%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 30% 70%, rgba(124, 58, 237, 0.15) 0%, transparent 50%);
+            animation: pulseGlow 8s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        .landing-page::after {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(124, 58, 237, 0.2));
+            border-radius: 50%;
+            top: -200px;
+            right: -200px;
+            filter: blur(80px);
+            animation: float 15s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(50px, -50px) rotate(120deg); }
+            66% { transform: translate(-50px, 50px) rotate(240deg); }
+        }
+
+        .decorative-shape {
+            display: none;
+        }
+
+
+
+        .landing-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            color: #fff;
+            max-width: 900px;
+            padding: 40px;
+            margin-top: 60px;
+        }
+
+        .landing-content h1 {
+            font-size: 4.5em;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: #fff;
+            line-height: 1.2;
+            animation: fadeInDown 1s ease-out;
+            letter-spacing: -2px;
+            text-shadow: 0 4px 30px rgba(0, 0, 0, 0.8), 0 2px 10px rgba(0, 0, 0, 0.6);
+        }
+
+        .landing-content .tagline {
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            font-weight: 600;
+            color: #fff;
+            animation: fadeInUp 1s ease-out 0.3s both;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.8), 0 1px 8px rgba(0, 0, 0, 0.6);
+        }
+
+        .landing-content .description {
+            font-size: 1.2em;
+            margin-bottom: 45px;
+            color: #fff;
+            line-height: 1.8;
+            animation: fadeInUp 1s ease-out 0.6s both;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.8), 0 1px 8px rgba(0, 0, 0, 0.6);
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .landing-cta {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeIn 1s ease-out 0.9s both;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .cta-btn {
+            padding: 16px 40px;
+            font-size: 1.1em;
+            font-weight: 700;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .cta-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .cta-btn.primary {
+            background: linear-gradient(135deg, #fff 0%, #f0f9ff 100%);
+            color: #1e40af;
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .cta-btn.primary:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.6);
+        }
+
+        .cta-btn.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+        }
+
+        .scroll-indicator a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: #bfdbfe;
+            text-decoration: none;
+            font-size: 0.9em;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .scroll-arrow {
+            width: 30px;
+            height: 50px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            padding-top: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+        }
+
+        .scroll-arrow::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: #fff;
+            border-radius: 50%;
+            animation: scrollDot 2s infinite;
+        }
+
+        @keyframes scrollDot {
+            0%, 100% { transform: translateY(0); opacity: 0; }
+            50% { transform: translateY(20px); opacity: 1; }
+        }
+
+        .scroll-indicator a:hover {
+            color: #fff;
+        }
+
+        .scroll-indicator a:hover .scroll-arrow {
+            border-color: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Features Section */
+        .features-section {
+            background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 80px 30px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto 60px;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 35px 25px;
+            border-radius: 16px;
+            background: #fff;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.08);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: #3b82f6;
+            box-shadow: 0 12px 40px rgba(59, 130, 246, 0.15);
+        }
+
+        .feature-icon {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #3b82f6 0%, #7c3aed 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 4px 8px rgba(59, 130, 246, 0.2));
+        }
+
+        .feature-card h3 {
+            color: #1e40af;
+            margin-bottom: 12px;
+            font-size: 1.4em;
+            font-weight: 700;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Vehicles Section */
+        .vehicles-section {
+            padding: 80px 30px;
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
         }
 
         h2 {
@@ -45,15 +514,17 @@
             padding: 9px 18px;
             border: none;
             border-radius: 6px;
-            background: #2a5298;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
             color: #fff;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s;
+            box-shadow: 0 2px 10px rgba(59, 130, 246, 0.3);
         }
 
         .filter-box button:hover {
-            background: #1e3c72;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4);
         }
 
         .vehicle-grid {
@@ -65,19 +536,22 @@
         .vehicle-card {
             background: #ffffff;
             padding: 18px;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-            transition: transform 0.2s, box-shadow 0.2s;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
         }
 
         .vehicle-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(59, 130, 246, 0.15);
+            border-color: #3b82f6;
         }
 
         .vehicle-card h3 {
             margin: 0 0 10px;
-            color: #2a5298;
+            color: #1e40af;
+            font-weight: 700;
         }
 
         .vehicle-info {
@@ -102,34 +576,38 @@
 
         .my-res-btn{
             display:inline-block;
-            padding: 9px 18px;
-            border-radius: 6px;
-            background:#17a2b8;
+            padding: 10px 20px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
             color:#fff;
             text-decoration:none;
             font-weight:600;
-            transition: background 0.3s;
+            transition: all 0.3s;
             margin-left:auto;
+            box-shadow: 0 2px 10px rgba(59, 130, 246, 0.3);
         }
         .my-res-btn:hover{
-            background:#117a8b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4);
         }
 
         .reserve-btn {
             display: inline-block;
-            padding: 9px 16px;
-            border-radius: 6px;
-            background: #28a745;
+            padding: 10px 18px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: #fff;
             text-decoration: none;
             font-weight: 600;
-            transition: background 0.3s;
+            transition: all 0.3s;
             margin-right: 8px;
             margin-top: 8px;
+            box-shadow: 0 2px 10px rgba(16, 185, 129, 0.3);
         }
 
         .reserve-btn:hover {
-            background: #1e7e34;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4);
         }
 
         .empty-state {
@@ -140,37 +618,362 @@
             color: #777;
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
+
+        /* How It Works Section */
+        .how-it-works-section {
+            padding: 100px 30px;
+            background: #fff;
+            position: relative;
+        }
+
+        .section-header {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            margin-bottom: 70px;
+        }
+
+        .section-header h2 {
+            font-size: 3em;
+            color: #0f172a;
+            margin-bottom: 15px;
+            font-weight: 800;
+        }
+
+        .section-header p {
+            font-size: 1.2em;
+            color: #64748b;
+            font-weight: 400;
+        }
+
+        .steps-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 50px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-card {
+            background: #fff;
+            padding: 50px 40px;
+            border-radius: 0;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: 4px solid #e2e8f0;
+            border-top: 1px solid #e2e8f0;
+            border-right: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .step-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: linear-gradient(180deg, #3b82f6 0%, #7c3aed 100%);
+            transform: scaleY(0);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .step-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .step-card:hover {
+            transform: translateX(10px);
+            box-shadow: -10px 10px 40px rgba(59, 130, 246, 0.1);
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: transparent;
+            border: 2px solid #3b82f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: 700;
+            margin: 0 0 30px 0;
+            color: #3b82f6;
+            transition: all 0.4s;
+        }
+
+        .step-card:hover .step-number {
+            background: #3b82f6;
+            color: #fff;
+            transform: rotate(360deg);
+        }
+
+        .step-card h3 {
+            margin-bottom: 20px;
+            font-size: 1.6em;
+            color: #0f172a;
+            font-weight: 700;
+        }
+
+        .step-card p {
+            color: #64748b;
+            line-height: 1.8;
+            font-size: 1.05em;
+        }
+
+        .step-icon {
+            display: none;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: 100px 30px;
+            background: linear-gradient(180deg, #f8fafc 0%, #fff 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stats-section .section-header {
+            margin-bottom: 70px;
+        }
+
+        .stats-section .section-header h2 {
+            color: #0f172a;
+        }
+
+        .stats-section .section-header p {
+            color: #64748b;
+        }
+
+        .stats-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-card {
+            background: #fff;
+            padding: 50px 30px;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 0;
+            background: linear-gradient(180deg, transparent, #f0f9ff);
+            transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .stat-card:hover::before {
+            height: 100%;
+        }
+
+        .stat-card:hover {
+            border-color: #3b82f6;
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.15);
+        }
+
+        .stat-icon {
+            display: none;
+        }
+
+        .stat-number {
+            font-size: 4em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #3b82f6 0%, #7c3aed 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            line-height: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-label {
+            font-size: 1.1em;
+            color: #475569;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9em;
+        }
+
+        .stat-progress {
+            display: none;
+        }
+
+        .stat-progress-bar {
+            display: none;
+        }
+
+        @keyframes fillProgress {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        /* Footer */
+        footer {
+            background: #0f172a;
+            color: #e9f0ff;
+            padding: 60px 30px 30px;
+            margin-top: 0;
+            border-top: 4px solid #3b82f6;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3 {
+            color: #fff;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+            font-weight: 700;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: #94a3b8;
+            line-height: 2;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: #3b82f6;
+            padding-left: 5px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(59, 130, 246, 0.2);
+            color: #64748b;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            width: 45px;
+            height: 45px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+            transition: all 0.3s;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .social-links a:hover {
+            background: linear-gradient(135deg, #3b82f6 0%, #7c3aed 100%);
+            transform: translateY(-5px);
+            border-color: transparent;
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+        }
     </style>
 </head>
 
 <body>
 
-<!-- ✅ Modal must be INSIDE body -->
-<div id="vehicleModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:9999;">
-  <div style="background:#fff; max-width:520px; margin:8vh auto; border-radius:12px; padding:18px; position:relative;">
-    <button type="button" onclick="closeVehicleModal()"
-            style="position:absolute; right:12px; top:10px; border:none; background:transparent; font-size:20px; cursor:pointer;">
-      ✕
-    </button>
-
-    <h3 style="margin-top:0; color:#2a5298;">Vehicle Details</h3>
-
-    <!-- ✅ This id must match JS -->
-    <div id="vehicleModalBody" style="font-size:14px; color:#444;">
-      Loading...
+<!-- Navbar -->
+<nav class="navbar">
+    <a href="#" class="navbar-brand">
+        <div class="brand-icon">PG</div>
+        <span>Project Gadi</span>
+    </a>
+    <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
+    <div class="navbar-menu" id="navbarMenu">
+        <a href="#vehicles" class="nav-link" onclick="scrollToSection(event, 'vehicles')">Vehicles</a>
+        <a href="#features" class="nav-link" onclick="scrollToSection(event, 'features')">Features</a>
+        <a href="#how-it-works" class="nav-link" onclick="scrollToSection(event, 'how-it-works')">How It Works</a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'my_reservations' %}" class="nav-btn">My Reservations</a>
+        {% else %}
+            <a href="{% url 'login' %}" class="nav-link">Login</a>
+            <a href="{% url 'signup' %}" class="nav-btn">Sign Up</a>
+        {% endif %}
     </div>
-  </div>
-</div>
+</nav>
 
-<div class="top-bar">
-    <h2>Available Vehicles</h2>
-
-    {% if user.is_authenticated %}
-        <a href="{% url 'my_reservations' %}" class="my-res-btn">
-            My Reservations
+<!-- Full Page Landing Section -->
+<section class="landing-page">
+    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAs0n-_5h2VTaO5Hn-MTQq253mY-f6sDsy9yoNQNALDlp39cJBvFHhkBSrcXvD_2xP1BhUCunMlUN8gmIo4KK9O9zKLOFuHCUZAxUNmH566_PT711gOVFO2uFe0s9mHrsPJj6PSvN9qDi9Nj5IEw9m78EGUQZ0AWJ9bN3wb9iWEqA4DCiMMvavJS__8d9ZtC89xpwNmsxjXuqwnYbGZKDF0_mMznJED736hpssK_C153HrMzF5z-3fH9hPUHrM-lC32Yxh6F6H8eAo" 
+         alt="Car Background" 
+         class="landing-bg-image">
+    <div class="landing-overlay"></div>
+    
+    <div class="decorative-shape shape-1"></div>
+    <div class="decorative-shape shape-2"></div>
+    <div class="decorative-shape shape-3"></div>
+    
+    <div class="landing-content">
+        <h1>Vehicle Reservation</h1>
+        <p class="tagline">Your Journey Starts Here</p>
+        <p class="description">
+            Discover a wide range of vehicles ready for your next adventure. 
+            Fast, easy, and secure reservations at your fingertips.
+        </p>
+        <div class="landing-cta">
+            {% if user.is_authenticated %}
+                <a href="#vehicles" class="cta-btn primary" onclick="scrollToVehicles(event)">Browse Vehicles</a>
+                <a href="{% url 'my_reservations' %}" class="cta-btn secondary">My Reservations</a>
+            {% else %}
+                <a href="{% url 'signup' %}" class="cta-btn primary">Get Started</a>
+                <a href="{% url 'login' %}" class="cta-btn secondary">Sign In</a>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="scroll-indicator">
+        <a href="#features" onclick="scrollToFeatures(event)">
+            <div class="scroll-arrow"></div>
+            <span>Scroll Down</span>
         </a>
-    {% endif %}
-</div>
+    </div>
+</section>
+
+<!-- Vehicles Section -->
+<section id="vehicles" class="vehicles-section">
+    <div class="top-bar">
+        <h2>Available Vehicles</h2>
+
+        {% if user.is_authenticated %}
+            <a href="{% url 'my_reservations' %}" class="my-res-btn">
+                My Reservations
+            </a>
+        {% endif %}
+    </div>
 
 <form method="get" class="filter-box">
     <label for="type">Filter by Type:</label>
@@ -213,7 +1016,7 @@
 
                 <a href="javascript:void(0)"
                    class="reserve-btn"
-                   style="background:#17a2b8;"
+                   style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); box-shadow: 0 2px 10px rgba(59, 130, 246, 0.3);"
                    onclick="openVehicleModal({{ v.id }})">
                    View Details
                 </a>
@@ -225,8 +1028,181 @@
         <p>No approved vehicles available.</p>
     </div>
 {% endif %}
+</section>
+
+<!-- Modal -->
+<div id="vehicleModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:9999;">
+  <div style="background:#fff; max-width:520px; margin:8vh auto; border-radius:12px; padding:18px; position:relative;">
+    <button type="button" onclick="closeVehicleModal()"
+            style="position:absolute; right:12px; top:10px; border:none; background:transparent; font-size:20px; cursor:pointer;">
+      ✕
+    </button>
+
+    <h3 style="margin-top:0; color:#1e40af; font-weight:700;">Vehicle Details</h3>
+    <div id="vehicleModalBody" style="font-size:14px; color:#444;">
+      Loading...
+    </div>
+  </div>
+</div>
+
+<!-- Features Section -->
+<section id="features" class="features-section">
+    <div class="section-header">
+        <h2>Why Choose Us?</h2>
+        <p>Experience the best vehicle reservation service</p>
+    </div>
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3>Instant Booking</h3>
+            <p>Reserve your vehicle in seconds with our streamlined booking process</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">✓</div>
+            <h3>Verified Vehicles</h3>
+            <p>All vehicles are approved and meet our quality standards</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🔒</div>
+            <h3>Secure & Safe</h3>
+            <p>Your data and reservations are protected with top-tier security</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">💰</div>
+            <h3>Best Prices</h3>
+            <p>Competitive rates with transparent pricing, no hidden fees</p>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section id="how-it-works" class="how-it-works-section">
+    <div class="section-header">
+        <h2>How It Works</h2>
+        <p>Get started in just 3 simple steps</p>
+    </div>
+    <div class="steps-container">
+        <div class="step-card">
+            <div class="step-number">1</div>
+            <h3>Browse Vehicles</h3>
+            <p>Explore our wide selection of verified vehicles. Filter by type and find the perfect match for your needs.</p>
+        </div>
+        <div class="step-card">
+            <div class="step-number">2</div>
+            <h3>Make Reservation</h3>
+            <p>Select your desired vehicle and submit a reservation request. Our secure system ensures your booking is safe.</p>
+        </div>
+        <div class="step-card">
+            <div class="step-number">3</div>
+            <h3>Enjoy Your Ride</h3>
+            <p>Once approved, pick up your vehicle and hit the road. It's that simple!</p>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section">
+    <div class="section-header">
+        <h2>Our Impact</h2>
+        <p>Trusted by thousands of users worldwide</p>
+    </div>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">500+</div>
+            <div class="stat-label">Vehicles Available</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">10K+</div>
+            <div class="stat-label">Happy Customers</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">98%</div>
+            <div class="stat-label">Satisfaction Rate</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">24/7</div>
+            <div class="stat-label">Support Available</div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="footer-content">
+        <div class="footer-section">
+            <h3>🚗 Vehicle Reservation</h3>
+            <p>Your trusted partner for vehicle reservations. Fast, secure, and reliable service at your fingertips.</p>
+            <div class="social-links">
+                <a href="#">📘</a>
+                <a href="#">🐦</a>
+                <a href="#">📷</a>
+                <a href="#">💼</a>
+            </div>
+        </div>
+        <div class="footer-section">
+            <h3>Quick Links</h3>
+            <a href="#vehicles">Browse Vehicles</a>
+            <a href="{% url 'my_reservations' %}">My Reservations</a>
+            {% if not user.is_authenticated %}
+                <a href="{% url 'signup' %}">Sign Up</a>
+                <a href="{% url 'login' %}">Login</a>
+            {% endif %}
+        </div>
+        <div class="footer-section">
+            <h3>Support</h3>
+            <a href="#">Help Center</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Contact Us</a>
+        </div>
+        <div class="footer-section">
+            <h3>Contact</h3>
+            <p>📧 support@vehiclereservation.com</p>
+            <p>📞 +1 (555) 123-4567</p>
+            <p>📍 123 Main Street, City, State</p>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2026 Vehicle Reservation. All rights reserved.</p>
+    </div>
+</footer>
 
 <script>
+  // Navbar scroll effect
+  window.addEventListener('scroll', function() {
+    const navbar = document.querySelector('.navbar');
+    if (window.scrollY > 50) {
+      navbar.classList.add('scrolled');
+    } else {
+      navbar.classList.remove('scrolled');
+    }
+  });
+
+  // Mobile menu toggle
+  function toggleMobileMenu() {
+    const menu = document.getElementById('navbarMenu');
+    menu.classList.toggle('active');
+  }
+
+  // Smooth scroll function
+  function scrollToSection(e, sectionId) {
+    e.preventDefault();
+    document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+    // Close mobile menu if open
+    const menu = document.getElementById('navbarMenu');
+    menu.classList.remove('active');
+  }
+
+  function scrollToVehicles(e) {
+    e.preventDefault();
+    document.getElementById('vehicles').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function scrollToFeatures(e) {
+    e.preventDefault();
+    document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
+  }
+
   async function openVehicleModal(vehicleId) {
     const modal = document.getElementById("vehicleModal");
     const body = document.getElementById("vehicleModalBody");
