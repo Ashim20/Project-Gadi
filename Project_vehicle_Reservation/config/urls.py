@@ -21,6 +21,9 @@ from django.http import HttpResponse
 from vehicles.views import public_vehicle_list
 from accounts.views import logout_view
 
+
+
+
 def home(request):
     return HttpResponse("Home OK ✅")
 
@@ -29,9 +32,12 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include("accounts.urls")),
     path("vehicles/", include("vehicles.urls")),
-     path("", public_vehicle_list, name="home"),
+    path("", public_vehicle_list, name="home"),
     path("reservations/", include("reservations.urls")),
     path("logout/", logout_view, name="logout"),
+    path("admin_panel/", include("admin_panel.urls")),
+
+
 
 
     
@@ -40,5 +46,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 
 

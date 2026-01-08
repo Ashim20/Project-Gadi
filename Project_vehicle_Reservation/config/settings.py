@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     "accounts",
     "vehicles",
     "reservations",
-    "tailwind",
+    "admin_panel"
+
     
 ]
 
