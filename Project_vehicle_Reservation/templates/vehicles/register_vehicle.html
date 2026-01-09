@@ -1,137 +1,152 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Register Vehicle</title>
+<meta charset="UTF-8">
+<title>Register Vehicle</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0f172a, #1e3a8a); /* dark blue gradient */
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+<style>
 
-        .card {
-            background: rgba(255, 255, 255, 0.95);
-            width: 480px;
-            padding: 35px 30px;
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.35);
-        }
-
-     
-        .card h2 {
-            text-align: center;
-            margin-bottom: 25px;
-            color: #1e3a8a;
-            font-size: 26px;
-            letter-spacing: 1px;
-        }
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #93c5fd, #bfdbfe); /* lighter background like profile page */
+  padding: 24px;
+  color: #f3f4f6;
+}
 
 
-        .note {
-            background: #e0f2fe;
-            padding: 12px 15px;
-            border-left: 4px solid #3b82f6;
-            font-size: 14px;
-            margin-bottom: 20px;
-            color: #1e40af;
-            border-radius: 6px;
-        }
+.card {
+  width: 100%;
+  max-width: 600px;
+  background: #1f2937; /* dark card */
+  border-radius: 16px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  color: #f3f4f6;
+}
 
-        form p {
-            margin-bottom: 18px;
-        }
-
-        label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: #1e293b;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 12px 10px;
-            border-radius: 8px;
-            border: 1px solid #cbd5e1;
-            font-size: 14px;
-            transition: border 0.3s, box-shadow 0.3s;
-        }
-
-        input[type="file"] {
-            padding: 6px;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 5px rgba(59,130,246,0.5);
-        }
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
 
 
-        .submit-btn {
-            width: 100%;
-            margin-top: 10px;
-            padding: 14px;
-            background: #3b82f6;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
-        }
-
-        .submit-btn:hover {
-            background: #1e40af;
-            transform: scale(1.02);
-        }
+.card h2 {
+  padding: 28px 30px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+  background: linear-gradient(90deg, #4f46e5, #2563eb);
+  color: #fff;
+}
 
 
-        .back-link {
-            text-align: center;
-            margin-top: 18px;
-        }
+.note {
+  background: #1e40af1a; /* subtle dark info box */
+  padding: 14px 18px;
+  border-left: 5px solid #2563eb;
+  font-size: 14px;
+  margin: 20px 30px 30px;
+  color: #dbeafe;
+  border-radius: 10px;
+}
 
-        .back-link a {
-            text-decoration: none;
-            color: #3b82f6;
-            font-weight: 600;
-            transition: color 0.3s;
-        }
+form {
+  padding: 0 30px 30px;
+}
 
-        .back-link a:hover {
-            color: #1e40af;
-            text-decoration: underline;
-        }
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #f3f4f6;
+  font-size: 14px;
+}
 
-    
-        .errorlist {
-            color: #dc2626;
-            font-size: 13px;
-            margin-bottom: 6px;
-            list-style: none;
-            padding-left: 0;
-        }
+input, select, textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid #374151;
+  font-size: 14px;
+  transition: all 0.2s;
+  background: #111827;
+  color: #f3f4f6;
+}
 
-    </style>
+input[type="file"] {
+  padding: 6px 12px;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.2);
+  background: #1f2937;
+  color: #f3f4f6;
+}
+
+.errorlist {
+  list-style: none;
+  padding: 12px 14px;
+  margin: 5px 0 15px;
+  background: #b91c1c1a;
+  border: 1px solid #fca5a5;
+  border-radius: 12px;
+  font-size: 13px;
+  color: #fca5a5;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(90deg, #4f46e5, #2563eb);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 10px;
+}
+
+.submit-btn:hover {
+  background: linear-gradient(90deg, #3730a3, #1e40af);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(30,64,175,0.3);
+}
+
+.back-link {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.back-link a {
+  text-decoration: none;
+  color: #2563eb;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.back-link a:hover {
+  color: #1e40af;
+  text-decoration: underline;
+}
+</style>
 </head>
 
 <body>
-
 <div class="card">
     <h2>Register Vehicle</h2>
 
@@ -141,12 +156,11 @@
 
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-
         {% for field in form %}
             <p>
                 {{ field.label_tag }}
                 {{ field }}
-                {{ field.errors }}
+                {% for err in field.errors %}<div class="errorlist">{{ err }}</div>{% endfor %}
             </p>
         {% endfor %}
 
@@ -159,6 +173,5 @@
         <a href="{% url 'my_vehicles' %}">← My Vehicles</a>
     </div>
 </div>
-
 </body>
 </html>
