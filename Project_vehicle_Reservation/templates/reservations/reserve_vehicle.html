@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Reserve Vehicle</title>
-
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
         body {
             margin: 0;
-            padding: 30px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f4f6f9;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -20,93 +21,114 @@
             background: #ffffff;
             width: 100%;
             max-width: 480px;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            padding: 35px 30px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+
+        .reserve-container:hover {
+            transform: translateY(-5px);
         }
 
         h2 {
             text-align: center;
-            margin-bottom: 20px;
-            color: #2a5298;
+            margin-bottom: 25px;
+            color: #2575fc;
+            font-weight: 700;
+            letter-spacing: 0.5px;
         }
 
         .vehicle-summary {
-            background: #f0f4ff;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 14px;
+            background: linear-gradient(90deg, #f0f4ff, #e0ebff);
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            font-size: 15px;
             color: #333;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.05);
         }
 
         .vehicle-summary strong {
-            font-size: 16px;
+            font-size: 17px;
+            color: #1a3d7c;
         }
 
         form p {
-            margin-bottom: 15px;
+            margin-bottom: 18px;
         }
 
         form label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
             font-weight: 600;
-            color: #555;
+            color: #444;
         }
 
         form input,
         form select,
         form textarea {
             width: 100%;
-            padding: 10px;
-            border-radius: 6px;
+            padding: 12px 10px;
+            border-radius: 8px;
             border: 1px solid #ccc;
             font-size: 14px;
+            transition: border 0.3s, box-shadow 0.3s;
+        }
+
+        form input:focus,
+        form select:focus,
+        form textarea:focus {
+            border-color: #2575fc;
+            box-shadow: 0 0 8px rgba(37, 117, 252, 0.3);
+            outline: none;
         }
 
         form textarea {
             resize: vertical;
-            min-height: 80px;
+            min-height: 90px;
         }
 
         .submit-btn {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             margin-top: 10px;
-            background: #28a745;
+            background: linear-gradient(90deg, #2575fc, #6a11cb);
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             color: #fff;
             font-size: 16px;
-            font-weight: bold;
+            font-weight: 700;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: background 0.3s, transform 0.2s;
         }
 
         .submit-btn:hover {
-            background: #1e7e34;
+            background: linear-gradient(90deg, #6a11cb, #2575fc);
+            transform: translateY(-2px);
         }
 
         .back-link {
             display: block;
             text-align: center;
-            margin-top: 15px;
+            margin-top: 18px;
             text-decoration: none;
             font-weight: 600;
-            color: #2a5298;
+            color: #2575fc;
+            transition: color 0.3s;
         }
 
         .back-link:hover {
+            color: #6a11cb;
             text-decoration: underline;
         }
 
         .errorlist {
-            color: red;
+            color: #e74c3c;
             font-size: 13px;
             list-style: none;
             padding-left: 0;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
     </style>
 </head>
