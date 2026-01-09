@@ -1,201 +1,159 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="dark" lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>My Vehicles</title>
+  <meta charset="utf-8" />
+  <title>My Vehicles</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <style>
-        body {
-            margin: 0;
-            padding: 30px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f4f6f9;
-        }
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 
-        .info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-        }
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
 
-        h2 {
-            color: #333;
-            margin: 0;
-        }
-        .action-btn {
-    background: #17a2b8;
-    color: #fff;
-    padding: 6px 12px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 600;
-    transition: background 0.3s;
-}
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#3b82f6",
+            "primary-hover": "#2563eb",
 
-.action-btn:hover {
-    background: #117a8b;
-}
-
-.disabled {
-    color: #aaa;
-    font-size: 13px;
-}
-
-
-        .btn {
-            background: #2a5298;
-            color: #fff;
-            padding: 10px 16px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: background 0.3s;
-        }
-
-        .btn:hover {
-            background: #1e3c72;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: #fff;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
-        }
-
-        th {
-            background: #2a5298;
-            color: #fff;
-            padding: 12px;
-            text-align: left;
-            font-size: 14px;
-        }
-
-        td {
-            padding: 12px;
-            border-bottom: 1px solid #eee;
-            color: #444;
-            font-size: 14px;
-        }
-
-        tr:hover {
-            background: #f9fbff;
-        }
-
-        .status {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
-            display: inline-block;
-            text-transform: capitalize;
-        }
-
-        .pending {
-            background: #fff3cd;
-            color: #856404;
-        }
-
-        .approved {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .rejected {
-            background: #f8d7da;
-            color: #721c24;
-        }
-
-        .feedback.rejected {
-            color: #c82333;
-            font-weight: 600;
-        }
-
-        .empty {
-            text-align: center;
-            padding: 20px;
-            color: #777;
-        }
-
-        .date {
-            font-size: 13px;
-            color: #666;
-        }
-         .btn-info { background:#17a2b8; }
-  .btn-info:hover { background:#117a8b; }
-  
-    </style>
+            "background-dark": "#0f172a", /* brighter dark */
+            "card-dark": "#1e293b",
+            "border-dark": "#334155",
+          },
+          fontFamily: {
+            display: ["Inter", "sans-serif"],
+          },
+          boxShadow: {
+            card: "0 10px 25px rgba(0,0,0,0.35)",
+          },
+        },
+      },
+    };
+  </script>
 </head>
 
-<body>
+<body class="bg-background-dark text-slate-100 h-screen flex overflow-hidden font-display">
 
+<!-- SIDEBAR -->
+<aside class="w-64 bg-card-dark border-r border-border-dark flex flex-col justify-between shrink-0">
 
-<div class="header" style="display:flex; gap:10px;">
-        <a href="{% url 'owner_reservations' %}" class="btn" style="background:#17a2b8;">
-            View Reservations
-        </a>
-
-        <a href="{% url 'register_vehicle' %}" class="btn">
-            + Register New Vehicle
-        </a>
+  <div class="p-4 space-y-4">
+    <div class="flex items-center gap-3">
+      <div class="bg-primary size-10 rounded-full flex items-center justify-center text-white">
+        <span class="material-symbols-outlined">directions_car</span>
+      </div>
+      <h1 class="font-bold text-lg text-white">Project Gadi</h1>
     </div>
-<table>
-    <tr>
-    <th>Vehicle</th>
-    <th>Plate</th>
-    <th>Status</th>
-    <th>Admin Feedback</th>
-    <th>Submitted</th>
-    <th>Action</th>
-</tr>
 
-    {% for v in vehicles %}
-<tr>
-    <td>
-        <strong>{{ v.model_name }}</strong><br>
-        <small>{{ v.vehicle_type }}</small>
-    </td>
+    <nav class="space-y-2 mt-6">
+      <a href="{% url 'owner_reservations' %}"
+         class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-white/10">
+        <span class="material-symbols-outlined">dashboard</span> Reservations
+      </a>
 
-    <td>{{ v.number_plate_no }}</td>
+      <a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary text-white">
+        <span class="material-symbols-outlined">garage_home</span> My Vehicles
+      </a>
+    </nav>
+  </div>
 
-    <td>
-        <span class="status {{ v.status }}">
-            {{ v.status }}
-        </span>
-    </td>
+  <div class="p-4">
+    <a href="{% url 'register_vehicle' %}"
+       class="flex items-center justify-center gap-2 px-4 py-3 bg-primary rounded-xl text-sm font-medium text-white hover:bg-primary-hover">
+      <span class="material-symbols-outlined">add</span>
+      Register Vehicle
+    </a>
+  </div>
+</aside>
 
-    <td class="feedback {% if v.status == 'rejected' %}rejected{% endif %}">
-        {{ v.admin_feedback|default:"—" }}
-    </td>
+<!-- MAIN -->
+<main class="flex-1 flex flex-col overflow-hidden">
 
-    <td class="date">
-        {{ v.submitted_at|date:"M d, Y" }}
-    </td>
+  <!-- HEADER -->
+  <header class="h-20 px-8 flex items-center justify-between border-b border-border-dark bg-background-dark/80">
+    <div>
+      <h2 class="text-xl font-bold text-white">My Vehicles</h2>
+      <p class="text-slate-300 text-sm">Track approval status of your vehicles</p>
+    </div>
+  </header>
 
-    <td>
-        {% if v.status != "approved" %}
-            <a href="{% url 'edit_vehicle' v.id %}" class="action-btn">
-                Edit / Resubmit
-            </a>
-        {% else %}
-            <span class="disabled">—</span>
-        {% endif %}
-    </td>
-</tr>
+  <!-- CONTENT -->
+  <div class="flex-1 overflow-y-auto px-8 py-6">
 
+    <div class="bg-card-dark border border-border-dark rounded-xl p-6 shadow-card">
 
-    {% empty %}
-    <tr>
-        <td colspan="5" class="empty">
-            No vehicles submitted yet.
-        </td>
-    </tr>
-    {% endfor %}
-</table>
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="text-slate-300 border-b border-border-dark">
+            <th class="py-3 text-left">Vehicle</th>
+            <th class="py-3 text-left">Plate</th>
+            <th class="py-3 text-left">Status</th>
+            <th class="py-3 text-left">Admin Feedback</th>
+            <th class="py-3 text-left">Submitted</th>
+            <th class="py-3 text-left">Action</th>
+          </tr>
+        </thead>
+
+        <tbody class="divide-y divide-border-dark">
+
+          {% for v in vehicles %}
+          <tr class="hover:bg-white/5">
+            <td class="py-4">
+              <p class="font-semibold text-white">{{ v.model_name }}</p>
+              <p class="text-xs text-slate-400">{{ v.vehicle_type }}</p>
+            </td>
+
+            <td class="py-4">{{ v.number_plate_no }}</td>
+
+            <td class="py-4">
+              <span class="px-3 py-1 rounded-full text-xs font-semibold
+                {% if v.status == 'approved' %} bg-green-500/20 text-green-300
+                {% elif v.status == 'rejected' %} bg-red-500/20 text-red-300
+                {% else %} bg-yellow-400/20 text-yellow-300 {% endif %}">
+                {{ v.status }}
+              </span>
+            </td>
+
+            <td class="py-4 {% if v.status == 'rejected' %}text-red-300{% else %}text-slate-200{% endif %}">
+              {{ v.admin_feedback|default:"—" }}
+            </td>
+
+            <td class="py-4 text-slate-300">
+              {{ v.submitted_at|date:"M d, Y" }}
+            </td>
+
+            <td class="py-4">
+              {% if v.status != "approved" %}
+                <a href="{% url 'edit_vehicle' v.id %}"
+                   class="text-primary hover:underline font-medium">
+                  Edit / Resubmit
+                </a>
+              {% else %}
+                <span class="text-slate-500">—</span>
+              {% endif %}
+            </td>
+          </tr>
+
+          {% empty %}
+          <tr>
+            <td colspan="6" class="py-8 text-center text-slate-400">
+              No vehicles submitted yet.
+            </td>
+          </tr>
+          {% endfor %}
+
+        </tbody>
+      </table>
+
+    </div>
+
+  </div>
+</main>
 
 </body>
 </html>

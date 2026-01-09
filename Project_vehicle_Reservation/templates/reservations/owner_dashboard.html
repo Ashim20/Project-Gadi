@@ -1,257 +1,192 @@
-{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html class="dark" lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Owner Reservations Dashboard</title>
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vehicle Reservation Dashboard</title>
 
-  <!-- Google Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#135bec",
+            "primary-hover": "#0f4bc2",
+            "background-dark": "#101622",
+            "card-dark": "#1a2332",
+            "border-dark": "#2a3649",
+          },
+          fontFamily: {
+            display: ["Inter", "sans-serif"],
+          },
+          boxShadow: {
+            card: "0 4px 12px rgba(0,0,0,0.25)",
+          },
+        },
+      },
+    };
+  </script>
 
   <style>
-    :root {
-      --bg: #f8fafc;
-      --card: #ffffff;
-      --text: #0f172a;
-      --muted: #64748b;
-      --primary: #2563eb;
-      --success: #16a34a;
-      --danger: #dc2626;
-      --warning: #d97706;
-      --border: #e5e7eb;
-    }
+    body { font-family: "Inter", sans-serif; }
 
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 40px auto;
-      padding: 0 20px;
-    }
-
-    h2 {
-      font-size: 1.8rem;
-      font-weight: 700;
-      margin-bottom: 20px;
-    }
-
-    .card {
-      background: var(--card);
-      border-radius: 16px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-      overflow: hidden;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    thead {
-      background: #f1f5f9;
-    }
-
-    th, td {
-      padding: 14px 16px;
-      text-align: left;
-      font-size: 0.95rem;
-      border-bottom: 1px solid var(--border);
-      vertical-align: middle;
-    }
-
-    th {
+    .status-badge {
+      padding: 4px 10px;
+      font-size: 12px;
       font-weight: 600;
-      color: var(--muted);
-      text-transform: uppercase;
-      font-size: 0.75rem;
-      letter-spacing: 0.05em;
+      border-radius: 6px;
     }
-
-    tbody tr:hover {
-      background: #f8fafc;
-    }
-
-    .vehicle {
-      font-weight: 600;
-    }
-
-    .plate {
-      display: block;
-      font-size: 0.8rem;
-      color: var(--muted);
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: capitalize;
-    }
-
-    .badge.pending { background: #fef3c7; color: #92400e; }
-    .badge.approved { background: #dcfce7; color: #166534; }
-    .badge.rejected { background: #fee2e2; color: #991b1b; }
-    .badge.cancelled { background: #e5e7eb; color: #374151; }
-
-    .note {
-      max-width: 260px;
-      font-size: 0.85rem;
-      color: var(--muted);
-    }
-
-    .actions a {
-      display: inline-block;
-      padding: 8px 14px;
-      border-radius: 10px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      text-decoration: none;
-      transition: all 0.2s ease;
-      margin-right: 6px;
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      color: #fff;
-    }
-
-    .btn-primary:hover { background: #1d4ed8; }
-
-    .btn-danger {
-      background: var(--danger);
-      color: #fff;
-    }
-
-    .btn-danger:hover { background: #b91c1c; }
-
-    .empty {
-      text-align: center;
-      padding: 60px 20px;
-      color: var(--muted);
-    }
-
-    
-.topbar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  margin-bottom:18px;
-  flex-wrap:wrap;
-}
-
-.home-btn{
-  display:inline-block;
-  padding:10px 16px;
-  border-radius:12px;
-  background:#2563eb;
-  color:#fff;
-  text-decoration:none;
-  font-weight:600;
-  font-size:0.9rem;
-  transition:all .2s ease;
-}
-.home-btn:hover{
-  background:#1d4ed8;
-}
-
-    @media (max-width: 900px) {
-      table, thead, tbody, th, td, tr {
-        display: block;
-      }
-
-      thead { display: none; }
-
-      tr {
-        border-bottom: 1px solid var(--border);
-        padding: 16px;
-      }
-
-      td {
-        border: none;
-        padding: 8px 0;
-      }
-
-      td::before {
-        content: attr(data-label);
-        display: block;
-        font-size: 0.7rem;
-        font-weight: 600;
-        color: var(--muted);
-        text-transform: uppercase;
-        margin-bottom: 2px;
-      }
-    }
+    .status-pending { background:#f59e0b33; color:#fbbf24; }
   </style>
 </head>
-<body>
 
-<div class="container">
-<div class="topbar">
-  <h2 style="margin:0;">Owner Reservations Dashboard</h2>
+<body class="bg-background-dark text-slate-200 h-screen overflow-hidden flex">
 
-  <a href="{% url 'my_vehicles' %}" class="home-btn">
-    Home
-  </a>
-</div>
+<!-- SIDEBAR -->
+<aside class="w-64 bg-card-dark border-r border-border-dark flex flex-col justify-between shrink-0">
 
-
-  <div class="card">
-    {% if reservations %}
-    <table>
-      <thead>
-        <tr>
-          <th>Vehicle</th>
-          <th>User</th>
-          <th>Dates</th>
-          <th>Status</th>
-          <th>Note</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for r in reservations %}
-        <tr>
-          <td data-label="Vehicle">
-            <span class="vehicle">{{ r.vehicle.model_name }}</span>
-            <span class="plate">{{ r.vehicle.number_plate_no }}</span>
-          </td>
-          <td data-label="User">{{ r.user.username }}</td>
-          <td data-label="Dates">{{ r.start_date }} → {{ r.end_date }}</td>
-          <td data-label="Status">
-            <span class="badge {{ r.status }}">{{ r.status }}</span>
-          </td>
-          <td data-label="Note" class="note">{{ r.purpose|default:"—" }}</td>
-          <td data-label="Actions" class="actions">
-            {% if r.status == "pending" %}
-              <a class="btn-primary" href="{% url 'owner_decide_reservation' r.id %}">Approve / Reject</a>
-            {% elif r.status == "approved" %}
-              <a class="btn-danger" href="{% url 'owner_cancel_approved' r.id %}">Cancel</a>
-            {% else %}
-              —
-            {% endif %}
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    {% else %}
-      <div class="empty">
-        <p>No reservations for your vehicles.</p>
+  <!-- TOP -->
+  <div class="p-4 space-y-4">
+    <div class="flex items-center gap-3">
+      <div class="bg-primary size-10 rounded-full flex items-center justify-center text-white">
+        <span class="material-symbols-outlined">directions_car</span>
       </div>
-    {% endif %}
+      <h1 class="font-bold text-lg text-white">Project Gadi</h1>
+    </div>
+
+    <nav class="space-y-2 mt-4">
+      <a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary text-white">
+        <span class="material-symbols-outlined">dashboard</span> Dashboard
+      </a>
+
+      <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-white/10">
+        <span class="material-symbols-outlined">garage_home</span> Vehicle Registration
+      </a>
+
+      <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-white/10">
+        <span class="material-symbols-outlined">group</span> Forms
+      </a>
+    </nav>
+  </div>
+
+  <!-- BOTTOM -->
+   <div class="p-4 space-y-4">
+    <a href="{% url 'my_vehicles' %}" 
+       class="flex items-center gap-2 px-4 py-3 bg-primary rounded-xl text-sm font-medium text-white hover:bg-primary-hover">
+      <span class="material-symbols-outlined">arrow_back</span>
+      Back to Home
+    </a>
+
+<div class="flex items-center gap-3">
+  <div class="size-10 rounded-full bg-cover border-2 border-primary"
+       style="background-image:url('https://cdn-icons-png.flaticon.com/512/8583/8583437.png');">
+  </div>
+  <div>
+    <p class="text-white font-semibold text-sm">Owner</p>
+    <p class="text-slate-500 text-xs">Project Gadi</p>
   </div>
 </div>
- 
-</body>
-</html>
+
+
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="flex-1 flex flex-col overflow-hidden">
+
+  <!-- HEADER -->
+  <header class="h-20 px-8 flex items-center justify-between border-b border-border-dark bg-background-dark/80">
+    <div>
+      <h2 class="text-xl font-bold text-white">Dashboard</h2>
+      <p class="text-slate-400 text-sm">Welcome back, here is today's overview.</p>
+    </div>
+
+    <div class="relative w-80 hidden md:block">
+      <input class="w-full bg-card-dark border border-border-dark rounded-lg pl-10 py-2 text-white" placeholder="Search...">
+      <span class="material-symbols-outlined absolute left-3 top-2.5 text-slate-500">search</span>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <div class="flex-1 overflow-y-auto px-8 py-6 space-y-6">
+<!-- Active Reservations -->
+<div class="bg-card-dark border border-border-dark rounded-xl p-5 shadow-card">
+  <h3 class="text-lg font-semibold text-white mb-4 text-center">
+    Owner Reservation Dashboard
+  </h3>
+
+  {% if reservations %}
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="text-slate-400 border-b border-border-dark">
+        <th class="py-2 text-left">Vehicle</th>
+        <th class="py-2 text-left">User</th>
+        <th class="py-2 text-left">Dates</th>
+        <th class="py-2 text-left">Status</th>
+        <th class="py-2 text-left">Note</th>
+        <th class="py-2 text-left">Action</th>
+      </tr>
+    </thead>
+
+    <tbody class="divide-y divide-border-dark">
+      {% for r in reservations %}
+      <tr class="text-slate-200">
+        <td class="py-3">
+          <div class="font-medium text-white">
+            {{ r.vehicle.model_name }}
+          </div>
+          <div class="text-xs text-slate-400">
+            {{ r.vehicle.number_plate_no }}
+          </div>
+        </td>
+
+        <td class="py-3">{{ r.user.username }}</td>
+
+        <td class="py-3">
+          {{ r.start_date }} → {{ r.end_date }}
+        </td>
+
+        <td class="py-3">
+          <span class="badge {{ r.status }}">
+            {{ r.status }}
+          </span>
+        </td>
+
+        <td class="py-3">
+          {{ r.purpose|default:"—" }}
+        </td>
+
+        <td class="py-3">
+          {% if r.status == "pending" %}
+            <a href="{% url 'owner_decide_reservation' r.id %}"
+               class="btn-primary">
+              Approve / Reject
+            </a>
+          {% elif r.status == "approved" %}
+            <a href="{% url 'owner_cancel_approved' r.id %}"
+               class="btn-danger">
+              Cancel
+            </a>
+          {% else %}
+            —
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% else %}
+  <div class="text-center text-slate-400 py-8">
+    <p>No reservations for your vehicles.</p>
+  </div>
+  {% endif %}
+</div>
